@@ -1,12 +1,22 @@
 # Overview of the Repository
 
-
+This repository will hold our data and updates for the FSB Placement Data Insights project - ISA 616. 
+The collaborators on this project are Brady Stultz and Ellie Hoog.
 
 ## Project Overview
 
 Annually, the FSB conducts a senior survey of graduates to learn of their employment status.  In addition, information is verified using LinkedIn and employer survey information.  The data you are provided ('FSB_BI_Survey_2019_2021.rds') contains data on graduates for 2019, 2020, and 2021.  The data are merged from two sources:  the senior survey, and data from the Miami University database.  
 
 The data are anonymized, however it is possible that if you look hard enough, you can identify students.  You are bound, ethically not to do so.  It is a strict ethical code that you will not discuss individual data points with ANYONE except for me and your team.  Failure to comply with this code of ethics will result in a failing grade in the course.  
+
+## Project Goals
+
+For this project, we will examine the correlation between internships and full-time placement. More specifically, we will answer the following questions:
+1. If a student has at least one internship, how much more likely are they to have a full-time job than if they did not have an internship?
+2. What if a student has two internships?
+3. Does having an internship mean your salary level will be higher in your full-time job?
+
+From our team's personal experience, we have found that there is immense pressure on students to secure at least one internship during their time at Miami. We are hoping our insights will shed more light on the subject using a data-centric approach. 
 
 ## Data Sources
 
