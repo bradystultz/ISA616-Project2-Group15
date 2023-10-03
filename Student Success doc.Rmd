@@ -13,17 +13,24 @@ For this project, we will examine the correlation between internships and full-t
 2.  What if a student has two internships?
 3.  Does having an internship mean your salary level will be higher in your full-time job?
 
+Our findings will be presented to Kirk Bogard, Associate Vice President for Development and External Relations at FSB.
+
 From our team's personal experience, we have found that there is immense pressure on students to secure at least one internship during their time at Miami. We are hoping our insights will shed more light on the subject using a data-centric approach.
 
-![](images/StudentSucessBVP.drawio (1).png)
-
+![](images/StudentSucessBVP.drawio%20(1).png)
 
 ## Exploring the Data
 
 ```{r}
-data = readRDS(file = "FSB_BI_Survey_2019_2021.rds")
-head(data)
+
 ```
 
+The data source includes three years of data representing FSB graduates, including graduates in 2019, 2020, and 2021. The dataset provided had 42 variables. The source is either derived by me during data cleaning/merging, from the Oracle Business Intelligence Enterprise Edition (OBIEE) maintained by Miami administration, or from the self reported senior survey. The data is a mixture of numeric and categorical variables.
+
+## Data Pre-Processing
+
+```{r}
 
 
+
+```
