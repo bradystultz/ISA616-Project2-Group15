@@ -16,3 +16,5 @@ For this project, we will examine the correlation between internships and full-t
 From our team's personal experience, we have found that there is immense pressure on students to secure at least one internship during their time at Miami. We are hoping our insights will shed more light on the subject using a data-centric approach.
 
 ![](images/StudentSucessBVP.drawio.png)
+## Exploring the Data
+
