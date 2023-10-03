@@ -21,7 +21,7 @@ From our team's personal experience, we have found that there is immense pressur
 ## Exploring the Data
 
 ```{r}
-
+head(data)
 ```
 
 
