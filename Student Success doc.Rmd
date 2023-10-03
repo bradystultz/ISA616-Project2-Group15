@@ -1,0 +1,20 @@
+---
+title: "Student Success Project"
+output: html_document
+date: "2023-10-01"
+author: "Ellie Hoog, Brady Stultz"
+---
+
+## Student Success Business Value Proposition
+
+For this project, we will examine the correlation between internships and full-time placement. More specifically, we will answer the following questions:
+
+1.  If a student has at least one internship, how much more likely are they to have a full-time job than if they did not have an internship?
+2.  What if a student has two internships?
+3.  Does having an internship mean your salary level will be higher in your full-time job?
+
+From our team's personal experience, we have found that there is immense pressure on students to secure at least one internship during their time at Miami. We are hoping our insights will shed more light on the subject using a data-centric approach.
+
+![](images/StudentSucessBVP.drawio (1).png)
+
+
