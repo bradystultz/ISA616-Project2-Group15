@@ -1,9 +1,25 @@
 ---
 title: "Student Success Project"
-output: html_document
-date: "2023-10-01"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 author: "Ellie Hoog, Brady Stultz"
+output: 
+  html_document:
+    code_folding: show
+    df_print: paged
+    number_sections: no
+    theme: readable
+    toc: yes
+    toc_float: yes
+    code_download: yes
+  word_document:
+    toc: no
 ---
+
+## Audience and Purpose
+
+Our findings will be presented to Kirk Bogard, Associate Vice President for Development and External Relations at FSB. Kirk and his team will use the data and our findings to: 1. Inform FSB rankings 2. Make their case for admission (parents = facts and figures, students = fit and feel) 3. Attract other companies to recruit from FSB 4. Help influence the types of jobs and salary levels they see offered to FSB students 5. FSB Brand Management (sound bites such as: "Farmer students are job ready on Day 1")
+
+Our audience also includes Dr. Allison Jones-Farmer, a shared work practitioner.
 
 ## Student Success Business Value Proposition
 
@@ -13,8 +29,6 @@ For this project, we will examine the correlation between internships and full-t
 2.  What if a student has two internships?
 3.  Does having an internship mean your salary level will be higher in your full-time job?
 
-Our findings will be presented to Kirk Bogard, Associate Vice President for Development and External Relations at FSB.
-
 From our team's personal experience, we have found that there is immense pressure on students to secure at least one internship during their time at Miami. We are hoping our insights will shed more light on the subject using a data-centric approach.
 
 ![](images/StudentSucessBVP.drawio%20(1).png)
@@ -22,15 +36,103 @@ From our team's personal experience, we have found that there is immense pressur
 ## Exploring the Data
 
 ```{r}
+data = readRDS(file = "FSB_BI_Survey_2019_2021.rds")
 
+head(data)
 ```
 
 The data source includes three years of data representing FSB graduates, including graduates in 2019, 2020, and 2021. The dataset provided had 42 variables. The source is either derived by me during data cleaning/merging, from the Oracle Business Intelligence Enterprise Edition (OBIEE) maintained by Miami administration, or from the self reported senior survey. The data is a mixture of numeric and categorical variables.
 
 ## Data Pre-Processing
 
+Initial drop of variables we feel are unnecessary for our given prompt regarding internships and full-time placement.
 ```{r}
+# Dropping unnecessary variables
 
+data$BBRJ = data$bbrj
+data$`Business Direct Admit` = data$BusDirectAdmit
+data$`Combined Bacc and Masters` = data$CombBandM
+data$`Dean's List`= data$DL
+data$`First Generation College Stdnt` = data$FGCS
+data$`FSB Scholars` = data$FSBS
+data$`Honors Program` = data$HP
+data$`President's List` = data$PresList
+data$`Study Abroad Courtesy Account` = data$SACA
+data$`Transfer Work (Pre-Banner)`= data$TW
+data$`Cum Laude` = data$CL
+data$`Magna Cum Laude` = data$MCL
+data$`Summa Cum Laude` = data$SCL
+data$`University Honors` = data$UH
+data$`UniversityHonors w/Distinction` = data$UHWD
+data$IPEDS.Race.Ethnicity = data$Race
+data$Gender = data$Gendergender
+data$Term.Code = data$CodeTerm
+data$latin_honors = data$honorlatin
+data$survey_gradprogram = data$gradpsur
+data$survey_gradschool = data$gradssur
+
+```
+
+We're also dropping the following variables: survey_internone, survey_interntwo, survey_internthree, survey_internfour. Most of these values are "N/A". For our analysis, we want to focus on the number of internships, not the company offering the internship.
+```{r}
+data$survey_internone = data$intern1
+data$survey_interntwo = data$intern2
+data$survey_internthree = data$intern3
+data$survey_internfour = data$intern4
+```
+
+We installed the "zoo" package to use the na.fill() function.
+```{r}
+if (require("zoo")) install.packages("zoo")
+pacman::p_load(zoo)
+
+```
+
+Many fields had blank values. In order to work with the data efficiently, we imputed the value "NA" into these fields using na.fill(). 
+```{r}
+# Impute missing values with "NA"
+
+missing_values = is.na(data)
+num_mv = sum(missing_values)
+print(num_mv)
+
+data$nmajor = na.fill(data$nmajor, fill = "NA")
+data$major1 = na.fill(data$major1, fill = "NA")
+data$major2 = na.fill(data$major2, fill = "NA")
+data$minor1 = na.fill(data$minor1, fill = "NA")
+data$minor2 = na.fill(data$minor2, fill = "NA")
+data$GPA.Range = na.fill(data$GPA.Range, fill = "NA")
+data$year.x = na.fill(data$year.x, fill = "NA")
+data$survey_city = na.fill(data$survey_city, fill = "NA")
+data$survey_company = na.fill(data$survey_company, fill = "NA")
+data$survey_deptfunc = na.fill(data$survey_deptfunc, fill = "NA")
+data$survey_internships = na.fill(data$survey_internships, fill = "NA")
+data$survey_offers = na.fill(data$survey_offers, fill = "NA")
+data$survey_plans = na.fill(data$survey_plans, fill = "NA")
+data$survey_pref_field = na.fill(data$survey_pref_field, fill = "NA")
+data$survey_pref_loc = na.fill(data$survey_pref_loc, fill = "NA")
+data$survey_salary = na.fill(data$survey_salary, fill = "NA")
+data$survey_state = na.fill(data$survey_state, fill = "NA")
 
 
 ```
+
+The variable salary is not imputing with "NA". Rather than assuming a $0 or average salary, we would rather treat these values as null. To fix this, we are going to change the data type from "number" to "character".
+```{r}
+data$survey_salary = as.character(data$survey_salary)
+data$survey_salary = na.fill(data$survey_salary, fill = "NA")
+```
+
+
+
+
+## Final Clean Data
+```{r}
+head(data)
+```
+
+
+
+## Computing Environment
+
+Our computing environment is an R markdown file within our R project, used in conjunction with GitHub. The R project allows us to bundle our data file and R markdown document to be bundled in its own folder. The GitHub environment enables collaborators to see changes within the documents.
