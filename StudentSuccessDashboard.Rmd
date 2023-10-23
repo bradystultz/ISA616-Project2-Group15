@@ -20,18 +20,26 @@ pacman::p_load(tidyverse, #for data manipulation
 
 #read in data
 intern = readRDS("FSB_BI_Survey_2019_2021.rds")
+data = readRDS("cleandata.RDS")
 ```
 
-# Survey Overview {data-orientation=columns}
+# Survey Overview {data-orientation="columns"}
 
-Overview of survey responses
-  
-## row {data-width=300}
+Overview of Survey Responses
+
+## row {data-width="600"}
 
 ### Internship Rate
 
 ```{r, echo = FALSE}
 
+data$survey_internships = as.numeric(data$survey_internships)
+library(dplyr)
+
+intern_rate = 100 * nrow(filter(data, survey_internships > 0)) / nrow(data)
+gauge(intern_rate, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49))
+      )
 ```
 
 ### Usable Responses
@@ -41,16 +49,28 @@ Overview of survey responses
 # you can find the icons here:https://fontawesome.com/icons
 # note that I have been unable to get all icons to work
 
+nusable = nrow(data)
 
-
-```   
- 
-### Overall Major Breakdown
-```{r}
+valueBox(nusable, icon = "fa-users")
 
 ```
 
-## row {data-height=600}
+### Overall Major Breakdown
+
+```{r, echo = FALSE}
+p = data |> 
+  ggplot(aes(reorder(major1, major1, function(x) - length(x)))) + 
+  geom_bar(color = "steelblue2", fill = "steelblue4") +
+  xlab("Primary Major") +
+  ylab("Number of Responses") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  coord_flip()
+ggplotly(p)
+  
+```
+
+## row {data-height="600"}
 
 ### Insights
 
@@ -60,122 +80,337 @@ For this project, we will examine the correlation between internships and full-t
 2.  What if a student has two internships?
 3.  Does having an internship mean your salary level will be higher in your full-time job?
 
-From our team's personal experience, we have found that there is immense pressure on students to secure at least one internship during their time at Miami. We are hoping our insights will shed more light on the subject using a data-centric approach.  
-   
+From our team's personal experience, we have found that there is immense pressure on students to secure at least one internship during their time at Miami. We are hoping our insights will shed more light on the subject using a data-centric approach.
 
-# 2019 Findings {data-orientation=columns}
+**Findings**
 
-## row {data-width=300}
+On average, students that have at least 1 internship are 95% more likely to have a full-time job than if they did not have an internship.
 
-### Usable Responses
-```{r}
+On average, students that have at least 2 internships are 61% more likely to have a full-time job than if they did not have an internship.
 
+For each year surveyed (2019, 2020, 2021), we found that post-graduate salary increases with the number of internships that a student has. This increase is small, but the relationship is linear and shows a positive relationship.
+
+For each year surveyed, we found that Finance and Marketing majors hold the most number of internships. However, this could be skewed as a result of those being the 2 most popular majors in Farmer.
+
+In 2020, the overall full-time placement rate drastically decreased from 2019 (99% placement to 67% placement). This is most likely due to the effects of Covid-19 on the economy and job market. Placement rate rose to 83% in 2021. 
+
+Although the placement rates were small, we found that it is possible to obtain a full-time job without having an internship. However, to boost your chances of placement, we recommend pursuing at least 1 internship prior to graduation.
+
+# 2019 Findings {data-orientation="columns"}
+
+## row {data-width="400"}
+
+### 2019 Responses
+
+```{r, echo = FALSE}
+nusable = nrow(filter(data, year.x == "2019"))
+
+valueBox(nusable, icon = "fa-users")
 ```
 
 ### Accepted Full-Time Offers from Students with at least One Internship
-```{r}
 
+```{r, echo = FALSE}
+al1int = filter(data, survey_internships > 0)
+ft_offer19 = filter(data, survey_plans == "accepted fulltime job", year.x == "2019")
+
+p = ft_offer19 |>  
+  ggplot(aes(x = survey_internships)) + 
+  geom_bar(color = "lightsalmon", fill = "lightsalmon") +
+  scale_x_continuous("Number of Internships", 
+                     labels = as.character(ft_offer19$survey_internships), 
+                     breaks = ft_offer19$survey_internships) +
+  xlab("Number of Internships") +
+  ylab("Accepted Full-Time Offers") +
+  theme_bw()
+ggplotly(p)
 ```
 
-### Major Breakdown
-```{r}
+## row {data-height="500"}
 
-```
-
-
-## row {data-height=600}
-
-### Post-Grad Plans
+### Correlation between Salary and Number of Internships (Respondents that Accepted a Full-Time Offer)
 
 ```{r,echo=FALSE}
 
+p = ft_offer19 |>  
+  ggplot(aes(x = survey_internships, y = survey_salary)) + 
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE, col = 'lightsalmon', linewidth = 1) +
+  scale_y_continuous(name = "Salary", labels = scales::comma) +
+  xlab("Number of Internships") +
+  ylab("Salary") +
+  theme_bw()
+ggplotly(p)
 ```
 
+### Number of Internships by Major
+
+```{r,echo=FALSE}
+intern19 = filter(data, survey_internships > 0, year.x == "2019")
+
+intern19$survey_internships = as.character(intern19$survey_internships)
+p = intern19 |> 
+  ggplot(aes(x = reorder(major1, major1, function(x) - length(x)), fill = survey_internships)) +
+  geom_bar(color = "lightsalmon") +
+  xlab("Primary Major") +
+  ylab("Number of Responses") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 30))
+
+ggplotly(p)
+
+```
+
+# 2020 Findings {data-orientation="columns"}
+
+## row {data-width="400"}
+
+### 2020 Responses
+
+```{r, echo = FALSE}
+nusable = nrow(filter(data, year.x == "2020"))
+
+valueBox(nusable, icon = "fa-users")
+```
+
+### Accepted Full-Time Offers from Students with at least One Internship
+
+```{r, echo = FALSE}
+al1int = filter(data, survey_internships > 0)
+ft_offer20 = filter(data, survey_plans == "accepted fulltime job", year.x == "2020")
+
+p = ft_offer20 |>  
+  ggplot(aes(x = survey_internships)) + 
+  geom_bar(color = "royalblue4", fill = "royalblue4") +
+  scale_x_continuous("Number of Internships", 
+                     labels = as.character(ft_offer20$survey_internships), 
+                     breaks = ft_offer20$survey_internships) +
+  xlab("Number of Internships") +
+  ylab("Accepted Full-Time Offers") +
+  theme_bw()
+ggplotly(p)
+```
+
+## row {data-height="500"}
+
+### Correlation between Salary and Number of Internships (Respondents that Accepted a Full-Time Offer)
+
+```{r,echo=FALSE}
+p = ft_offer20 |>  
+  ggplot(aes(x = survey_internships, y = survey_salary)) + 
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE, col = 'royalblue4', linewidth = 1) +
+  scale_y_continuous(name = "Salary", labels = scales::comma) +
+  xlab("Number of Internships") +
+  ylab("Salary") +
+  theme_bw()
+ggplotly(p)
+
+```
 
 ### Number of Internships by Major
 
 ```{r,echo=FALSE}
 
+intern20 = filter(data, survey_internships > 0, year.x == "2020")
+
+intern20$survey_internships = as.character(intern20$survey_internships)
+
+p = intern20 |> 
+  ggplot(aes(x = reorder(major1, major1, function(x) - length(x)), fill = survey_internships)) +
+  geom_bar(color = "royalblue4") +
+  xlab("Primary Major") +
+  ylab("Number of Responses") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 30))
+
+ggplotly(p)
 ```
 
+# 2021 Findings {data-orientation="columns"}
 
-# 2020 Findings {data-orientation=columns}
+## row {data-width="400"}
 
-## row {data-width=300}
+### 2021 Responses
 
-### Usable Responses
-```{r}
+```{r, echo = FALSE}
+nusable = nrow(filter(data, year.x == "2021"))
 
+valueBox(nusable, icon = "fa-users")
 ```
 
 ### Accepted Full-Time Offers from Students with at least One Internship
-```{r}
 
+```{r, echo = FALSE}
+al1int = filter(data, survey_internships > 0)
+ft_offer21 = filter(data, survey_plans == "accepted fulltime job", year.x == "2021")
+
+p = ft_offer21 |>  
+  ggplot(aes(x = survey_internships)) + 
+  geom_bar(color = "honeydew4", fill = "honeydew4") +
+  scale_x_continuous("Number of Internships", 
+                     labels = as.character(ft_offer21$survey_internships), 
+                     breaks = ft_offer21$survey_internships) +
+  xlab("Number of Internships") +
+  ylab("Accepted Full-Time Offers") +
+  theme_bw()
+ggplotly(p)
 ```
 
-### Major Breakdown
-```{r}
+## row {data-height="500"}
 
-```
-
-
-## row {data-height=600}
-
-### Post-Grad Plans
+### Correlation between Salary and Number of Internships (Respondents that Accepted a Full-Time Offer)
 
 ```{r,echo=FALSE}
+ft_offer21 = ft_offer21[-120,]
 
+p = ft_offer21 |>  
+  ggplot(aes(x = survey_internships, y = survey_salary)) + 
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE, col = 'honeydew4', linewidth = 1) +
+  scale_y_continuous(name = "Salary", labels = scales::comma) +
+  xlab("Number of Internships") +
+  ylab("Salary") +
+  theme_bw()
+ggplotly(p)
 ```
-
 
 ### Number of Internships by Major
 
 ```{r,echo=FALSE}
+intern21 = filter(data, survey_internships > 0, year.x == "2021")
 
+intern21$survey_internships = as.character(intern21$survey_internships)
+
+p = intern21 |> 
+  ggplot(aes(x = reorder(major1, major1, function(x) - length(x)), fill = survey_internships)) +
+  geom_bar(color = "honeydew4") +
+  xlab("Primary Major") +
+  ylab("Number of Responses") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 30))
+
+ggplotly(p)
 ```
 
+# Final Findings: Internship to Full-Time Placement Rate Over Time
 
-# 2021 Findings {data-orientation=columns}
+## row {data-height="500"}
 
-## row {data-width=300}
+### 2019
 
-### Usable Responses
-```{r}
+```{r, echo = FALSE}
+data$survey_internships = as.numeric(data$survey_internships)
+library(dplyr)
+intern19 = filter(data, year.x == "2019", survey_internships > 0)
 
+rate19 = round(100 * nrow(ft_offer19) / nrow(intern19), 0)
+gauge(rate19, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49)),
+      label = "Overall"
+      )
+
+rate191 = round(100 * nrow(filter(data, year.x == "2019", survey_internships == 1)) / nrow(intern19), 0)
+gauge(rate191, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49)),
+      label = "1 Internship"
+      )
+
+rate192 = round(100 * nrow(filter(data, year.x == "2019", survey_internships == 2)) / nrow(intern19), 0)
+gauge(rate192, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49)),
+      label = "2 Internships"
+      )
+
+rate193 = round(100 * nrow(filter(data, year.x == "2019", survey_internships > 2)) / nrow(intern19), 0)
+gauge(rate193, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49)),
+      label = "3+ Internships"
+      )
 ```
 
-### Accepted Full-Time Offers from Students with at least One Internship
-```{r}
+### 2020
 
+```{r, echo = FALSE}
+intern20 = filter(data, year.x == "2020", survey_internships > 0)
+
+rate20 = round(100 * nrow(ft_offer20) / nrow(intern20), 0)
+gauge(rate20, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49)),
+      label = "Overall"
+      )
+
+rate201 = round(100 * nrow(filter(data, year.x == "2020", survey_internships == 1)) / nrow(intern20), 0)
+gauge(rate201, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49)),
+      label = "1 Internship"
+      )
+
+rate202 = round(100 * nrow(filter(data, year.x == "2020", survey_internships == 2)) / nrow(intern20), 0)
+gauge(rate202, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49)),
+      label = "2 Internships"
+      )
+
+rate203 = round(100 * nrow(filter(data, year.x == "2020", survey_internships > 2)) / nrow(intern20), 0)
+gauge(rate203, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49)),
+      label = "3+ Internships"
+      )
 ```
 
-### Major Breakdown
-```{r}
+### 2021
 
+```{r, echo = FALSE}
+intern21 = filter(data, year.x == "2021", survey_internships > 0)
+
+rate21 = round(100 * nrow(ft_offer21) / nrow(intern21), 0)
+gauge(rate21, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49)),
+      label = "Overall"
+      )
+
+rate211 = round(100 * nrow(filter(data, year.x == "2021", survey_internships == 1)) / nrow(intern21), 0)
+gauge(rate211, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49)),
+      label = "1 Internship"
+      )
+
+rate212 = round(100 * nrow(filter(data, year.x == "2021", survey_internships == 2)) / nrow(intern21), 0)
+gauge(rate212, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49)),
+      label = "2 Internships"
+      )
+
+rate213 = round(100 * nrow(filter(data, year.x == "2021", survey_internships > 2)) / nrow(intern21), 0)
+gauge(rate213, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49)),
+      label = "3+ Internships"
+      )
 ```
 
+### Full-Time Placement Rate for Students with 0 Internships
 
-## row {data-height=600}
+```{r, echo = FALSE}
 
-### Post-Grad Plans
+yr19 = filter(data, year.x == "2019")
+rate190 = round(100 * nrow(filter(yr19, survey_internships == 0)) / nrow(yr19), 0)
+gauge(rate190, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49)),
+      label = "2019"
+)
 
-```{r,echo=FALSE}
+yr20 = filter(data, year.x == "2020")
+rate200 = round(100 * nrow(filter(yr20, survey_internships == 0)) / nrow(yr20), 0)
+gauge(rate200, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49)),
+      label = "2020"
+)
 
+yr21 = filter(data, year.x == "2021")
+rate210 = round(100 * nrow(filter(yr21, survey_internships == 0)) / nrow(yr21), 0)
+gauge(rate210, min = 0, max = 100, symbol = '%', 
+      gaugeSectors(success = c(75, 100), warning = c(50, 74), danger = c(0, 49)),
+      label = "2021"
+)
 ```
-
-
-### Number of Internships by Major
-
-```{r,echo=FALSE}
-
-```
-
-
-# Final Findings
-
-### Internship to Full-Time Placement Rate Over Time
-
-```{r}
-
-```
-

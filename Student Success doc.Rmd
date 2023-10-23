@@ -172,44 +172,45 @@ summary(data)
 
 We installed the "zoo" package to use the na.fill() function.
 ```{r}
-install.packages("zoo")
+# install.packages("zoo")
 pacman::p_load(zoo)
 
 ```
 
-Many fields had blank values. In order to work with the data efficiently, we imputed the value "NA" into these fields using na.fill(). 
+Many fields had blank values. In order to work with the data efficiently, we imputed the value "NA" into these fields using na.fill().  For the dashboard, we found it was easier to visualize the data if we did not impute missing values with NA.
 ```{r}
 # Impute missing values with "NA"
 
-missing_values = is.na(data)
-num_mv = sum(missing_values)
-print(num_mv)
+# missing_values = is.na(data)
+# num_mv = sum(missing_values)
+# print(num_mv)
 
-data$nmajor = na.fill(data$nmajor, fill = "NA")
-data$major1 = na.fill(data$major1, fill = "NA")
-data$major2 = na.fill(data$major2, fill = "NA")
-data$minor1 = na.fill(data$minor1, fill = "NA")
-data$minor2 = na.fill(data$minor2, fill = "NA")
-data$GPA.Range = na.fill(data$GPA.Range, fill = "NA")
-data$year.x = na.fill(data$year.x, fill = "NA")
-data$survey_city = na.fill(data$survey_city, fill = "NA")
-data$survey_company = na.fill(data$survey_company, fill = "NA")
-data$survey_deptfunc = na.fill(data$survey_deptfunc, fill = "NA")
-data$survey_internships = na.fill(data$survey_internships, fill = "NA")
-data$survey_offers = na.fill(data$survey_offers, fill = "NA")
-data$survey_plans = na.fill(data$survey_plans, fill = "NA")
-data$survey_pref_field = na.fill(data$survey_pref_field, fill = "NA")
-data$survey_pref_loc = na.fill(data$survey_pref_loc, fill = "NA")
-data$survey_salary = na.fill(data$survey_salary, fill = "NA")
-data$survey_state = na.fill(data$survey_state, fill = "NA")
+# data$nmajor = na.fill(data$nmajor, fill = "NA")
+# data$major1 = na.fill(data$major1, fill = "NA")
+# data$major2 = na.fill(data$major2, fill = "NA")
+# data$minor1 = na.fill(data$minor1, fill = "NA")
+# data$minor2 = na.fill(data$minor2, fill = "NA")
+# data$GPA.Range = na.fill(data$GPA.Range, fill = "NA")
+# data$year.x = na.fill(data$year.x, fill = "NA")
+# data$survey_city = na.fill(data$survey_city, fill = "NA")
+# data$survey_company = na.fill(data$survey_company, fill = "NA")
+# data$survey_deptfunc = na.fill(data$survey_deptfunc, fill = "NA")
+# data$survey_internships = na.fill(data$survey_internships, fill = "NA")
+# data$survey_offers = na.fill(data$survey_offers, fill = "NA")
+# data$survey_plans = na.fill(data$survey_plans, fill = "NA")
+# data$survey_pref_field = na.fill(data$survey_pref_field, fill = "NA")
+# data$survey_pref_loc = na.fill(data$survey_pref_loc, fill = "NA")
+# data$survey_salary = na.fill(data$survey_salary, fill = "NA")
+# data$survey_state = na.fill(data$survey_state, fill = "NA")
 
 
 ```
 
 The variable salary is not imputing with "NA". Rather than assuming a $0 or average salary, we would rather treat these values as null. To fix this, we are going to change the data type from "number" to "character".
+For the dashboard, we found it was easier to visualize the data if we did not impute missing values with NA.
 ```{r}
-data$survey_salary = as.character(data$survey_salary)
-data$survey_salary = na.fill(data$survey_salary, fill = "NA")
+# data$survey_salary = as.character(data$survey_salary)
+# data$survey_salary = na.fill(data$survey_salary, fill = "NA")
 ```
 
 
@@ -227,5 +228,11 @@ head(data)
 Our computing environment is an R markdown file within our R project, used in conjunction with GitHub. The R project allows us to bundle our data file and R markdown document to be bundled in its own folder. The GitHub environment enables collaborators to see changes within the documents.
 ```{r}
 sessionInfo()
+```
+
+
+#### Saving Clean Data to RDS File
+```{r}
+saveRDS(data, "cleandata.RDS")
 ```
 
