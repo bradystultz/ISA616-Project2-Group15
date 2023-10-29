@@ -24,7 +24,7 @@ This project, including its data and visualizations, will inform our client (and
 
 ## Deliverables
 
-1. Student Success Dashboard: a collection of data visualizations for our client that can be presented to potential companies in search of a partnership with FSB, or families of prospective students looking to see the benefits of FSB regarding internships and full-time placement after graduation. This dashboard will relieve the pain of attracting recruiters to obtain talent fom Miami based on student interest. Our findings can optimize the allocation of resources to different majors and years in the internship search.
+Student Success Dashboard: a collection of data visualizations for our client that can be presented to potential companies in search of a partnership with FSB, or families of prospective students looking to see the benefits of FSB regarding internships and full-time placement after graduation. This dashboard will relieve the pain of attracting recruiters to obtain talent fom Miami based on student interest. Our findings can optimize the allocation of resources to different majors and years in the internship search.
 
 ## Data Sources
 
@@ -83,3 +83,4 @@ You have three years of data representing FSB graduates, including graduates in 
 6. README.md: Provides an overview of our project to the client
 7. Student Success doc.Rmd/html: Overview of project, Business Value Proposition, data pre-processing
 8. StudentSuccessDashboard.Rmd/html: Final dashboard visualization of our findings
+9. Student Success - Github Link: link to our public Github repository
